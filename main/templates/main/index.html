@@ -1,12 +1,32 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
 </head>
 <body>
-    <h1>Главная страница</h1>
-    <p>Привет, {{ name }}</p>
+    <h1>Каталог постов</h1>
+
+    {% for post in dataset %}
+        {% if post.is_published %}
+            <hr>
+            <p>Пост - {{ post.title }}
+            
+            <p>
+            {% for hashtag in post.hashtags %}
+                #{{ hashtag }}
+            {% endfor %}
+            </p>
+            
+            {% comment %} <a href="post/{{ post.slug }}">Подробнее</a> {% endcomment %}
+            <a href="{% url 'post_by_slug' post.slug %}">Подробнее</a>
+            <hr>
+        {% endif %}
+    {% endfor %}
+
 </body>
 </html>
