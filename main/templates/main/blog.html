@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Каталог постов{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Каталог постов</h1>
+
+    {% for post in dataset %}
+    {% include 'main/post_preview_include.html' %}
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% comment %} {% block scripts %}
+<script>
+    let someStr = "{{ some_str }}";
+    console.log(someStr);
+</script>
+{% endblock %} {% endcomment %}

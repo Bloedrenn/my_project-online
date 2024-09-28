@@ -1,12 +1,37 @@
 from django.shortcuts import render, HttpResponse
 from .dataset import dataset
 
-# Create your views here.
+menu = [
+    {"name": "Главная", "alias": "main"},
+    {"name": "Блог", "alias": "blog"},
+    {"name": "О проекте", "alias": "about"},
+]
 
-def index(request):
-    context = {'dataset': dataset}
+
+def blog(request):
+    context = {
+        'dataset': dataset,
+        'menu': menu,
+        'page_alias': 'blog'   
+    }
+
+    return render(request, template_name='main/blog.html', context=context)
+
+def main(request):
+    context = {
+        'menu': menu,
+        'page_alias': 'main'   
+    }
 
     return render(request, template_name='main/index.html', context=context)
+
+def about(request):
+    context = {
+        'menu': menu,
+        'page_alias': 'about'   
+    }
+
+    return render(request, template_name='main/about.html', context=context)
 
 
 def post_by_slug(request, slug):
@@ -15,4 +40,8 @@ def post_by_slug(request, slug):
     if not post:
         return HttpResponse('404 - Пост не найден', status=404)
     
-    return render(request, 'main/post_detail.html', context=post[0])
+    context = post[0]
+    context['menu'] = menu
+    context['page_alias'] = 'blog'
+    
+    return render(request, 'main/post_detail.html', context=context)
