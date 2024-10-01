@@ -5,13 +5,13 @@
 {% block content %}
 <div class="container my-5">
     <h1>Заголовок поста - {{ title }}</h1>
-    <p>Текст поста - {{ post }}</p>
+    <p>Текст поста - {{ text }}</p>
     <p>Теги:
     {% for hashtag in hashtags %}
         <span class="hashtag">#{{ hashtag }}</span>
     {% endfor %}
     </p>
-    <p>Количество просмотров поста - {{ views }}</p>
-    <p>Количество лайков поста - {{ likes }}</p>
+    <p>Время создания поста - {{ created_at }}</p>
+    <p>Последнее обновление поста - {{ updated_at }}</p>
 </div>
 {% endblock %}
