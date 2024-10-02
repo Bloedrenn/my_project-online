@@ -5,7 +5,8 @@ from .models import Post
 menu = [
     {"name": "Главная", "alias": "main"},
     {"name": "Блог", "alias": "blog"},
-    {"name": "О проекте", "alias": "about"},
+    {"name": "Добавить пост", "alias": "add_post"},
+    {"name": "О проекте", "alias": "about"}
 ]
 
 
@@ -56,3 +57,33 @@ def post_by_slug(request, slug):
     context['page_alias'] = 'blog'
     
     return render(request, 'main/post_detail.html', context=context)
+
+def add_post(request):
+    context = {
+        'menu': menu,
+        'page_alias': 'add_post'
+    }
+
+    if request.method == 'GET':
+        return render(request, 'main/add_post.html', context=context)
+    
+    elif request.method == 'POST':
+        author = request.user
+        title = request.POST['title']
+        text = request.POST['text']
+
+        if title and text:
+            if not Post.objects.filter(title=title).exists():
+                Post.objects.create(author=author, title=title, text=text)
+
+                context['message'] = 'Пост успешно добавлен'
+
+                return render(request, 'main/add_post.html', context=context)
+            else:
+                context['message'] = 'Такой пост уже существует'
+
+                return render(request, 'main/add_post.html', context=context)
+        else:
+            context.update({'message': 'Заполните все поля'})
+
+            return render(request, 'main/add_post.html', context=context)
