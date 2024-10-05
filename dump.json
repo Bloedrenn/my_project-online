@@ -1,0 +1,566 @@
+[
+{
+  "model": "admin.logentry",
+  "pk": 1,
+  "fields": {
+    "action_time": "2024-10-01T17:15:00.884Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "2",
+    "object_repr": "Введение в Python",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Slug\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 2,
+  "fields": {
+    "action_time": "2024-10-02T16:03:36.937Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "6",
+    "object_repr": "aaadsadsa",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 3,
+  "fields": {
+    "action_time": "2024-10-02T16:03:36.938Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "5",
+    "object_repr": "aaa",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 4,
+  "fields": {
+    "action_time": "2024-10-04T13:37:16.249Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "10",
+    "object_repr": "der",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 5,
+  "fields": {
+    "action_time": "2024-10-04T13:37:16.249Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "9",
+    "object_repr": "Новые посты ахахах",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 6,
+  "fields": {
+    "action_time": "2024-10-04T13:37:16.249Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "8",
+    "object_repr": "ewewe",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 7,
+  "fields": {
+    "action_time": "2024-10-04T13:37:16.249Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "7",
+    "object_repr": "Как я люблю себя",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 8,
+  "fields": {
+    "action_time": "2024-10-04T17:30:56.698Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "2",
+    "object_repr": "Введение в Python",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Text\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 9,
+  "fields": {
+    "action_time": "2024-10-04T17:37:34.132Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "2",
+    "object_repr": "Введение в Python",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Text\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 10,
+  "fields": {
+    "action_time": "2024-10-04T18:06:49.951Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "2",
+    "object_repr": "Введение в Python",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Text\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 11,
+  "fields": {
+    "action_time": "2024-10-04T18:07:59.984Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "4",
+    "object_repr": "Введение в SQL",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Text\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 12,
+  "fields": {
+    "action_time": "2024-10-04T18:10:40.554Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "4",
+    "object_repr": "Введение в SQL",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Text\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 13,
+  "fields": {
+    "action_time": "2024-10-04T18:11:27.313Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "4",
+    "object_repr": "Введение в SQL",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Text\"]}}]"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 1,
+  "fields": {
+    "name": "Can add log entry",
+    "content_type": 1,
+    "codename": "add_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 2,
+  "fields": {
+    "name": "Can change log entry",
+    "content_type": 1,
+    "codename": "change_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 3,
+  "fields": {
+    "name": "Can delete log entry",
+    "content_type": 1,
+    "codename": "delete_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 4,
+  "fields": {
+    "name": "Can view log entry",
+    "content_type": 1,
+    "codename": "view_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 5,
+  "fields": {
+    "name": "Can add permission",
+    "content_type": 2,
+    "codename": "add_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 6,
+  "fields": {
+    "name": "Can change permission",
+    "content_type": 2,
+    "codename": "change_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 7,
+  "fields": {
+    "name": "Can delete permission",
+    "content_type": 2,
+    "codename": "delete_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 8,
+  "fields": {
+    "name": "Can view permission",
+    "content_type": 2,
+    "codename": "view_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 9,
+  "fields": {
+    "name": "Can add group",
+    "content_type": 3,
+    "codename": "add_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 10,
+  "fields": {
+    "name": "Can change group",
+    "content_type": 3,
+    "codename": "change_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 11,
+  "fields": {
+    "name": "Can delete group",
+    "content_type": 3,
+    "codename": "delete_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 12,
+  "fields": {
+    "name": "Can view group",
+    "content_type": 3,
+    "codename": "view_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 13,
+  "fields": {
+    "name": "Can add user",
+    "content_type": 4,
+    "codename": "add_user"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 14,
+  "fields": {
+    "name": "Can change user",
+    "content_type": 4,
+    "codename": "change_user"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 15,
+  "fields": {
+    "name": "Can delete user",
+    "content_type": 4,
+    "codename": "delete_user"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 16,
+  "fields": {
+    "name": "Can view user",
+    "content_type": 4,
+    "codename": "view_user"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 17,
+  "fields": {
+    "name": "Can add content type",
+    "content_type": 5,
+    "codename": "add_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 18,
+  "fields": {
+    "name": "Can change content type",
+    "content_type": 5,
+    "codename": "change_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 19,
+  "fields": {
+    "name": "Can delete content type",
+    "content_type": 5,
+    "codename": "delete_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 20,
+  "fields": {
+    "name": "Can view content type",
+    "content_type": 5,
+    "codename": "view_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 21,
+  "fields": {
+    "name": "Can add session",
+    "content_type": 6,
+    "codename": "add_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 22,
+  "fields": {
+    "name": "Can change session",
+    "content_type": 6,
+    "codename": "change_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 23,
+  "fields": {
+    "name": "Can delete session",
+    "content_type": 6,
+    "codename": "delete_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 24,
+  "fields": {
+    "name": "Can view session",
+    "content_type": 6,
+    "codename": "view_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 25,
+  "fields": {
+    "name": "Can add post",
+    "content_type": 7,
+    "codename": "add_post"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 26,
+  "fields": {
+    "name": "Can change post",
+    "content_type": 7,
+    "codename": "change_post"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 27,
+  "fields": {
+    "name": "Can delete post",
+    "content_type": 7,
+    "codename": "delete_post"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 28,
+  "fields": {
+    "name": "Can view post",
+    "content_type": 7,
+    "codename": "view_post"
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$870000$VSS7ylDxGQQeFZGbhsW44H$FaR/9aD5fHqq5RfjolOS/z60Q4BUSC6q2Diu7PFEVXg=",
+    "last_login": "2024-10-04T16:15:13.588Z",
+    "is_superuser": true,
+    "username": "admin",
+    "first_name": "",
+    "last_name": "",
+    "email": "admin@gmail.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2024-10-01T13:22:04.052Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 1,
+  "fields": {
+    "app_label": "admin",
+    "model": "logentry"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 2,
+  "fields": {
+    "app_label": "auth",
+    "model": "permission"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 3,
+  "fields": {
+    "app_label": "auth",
+    "model": "group"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 4,
+  "fields": {
+    "app_label": "auth",
+    "model": "user"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 5,
+  "fields": {
+    "app_label": "contenttypes",
+    "model": "contenttype"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 6,
+  "fields": {
+    "app_label": "sessions",
+    "model": "session"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 7,
+  "fields": {
+    "app_label": "main",
+    "model": "post"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "dbqqwmyo9h45ksewd7n8da98hxj53kk9",
+  "fields": {
+    "session_data": ".eJxVjDsOwjAQBe_iGllZ_7Ap6TmDtV6vcQA5UpxUiLuTSCmgfTPz3iLiutS4dp7jmMVFgDj9bgnpyW0H-YHtPkma2jKPSe6KPGiXtynz63q4fwcVe91qPA9gi8oMRiuNVFJ2xZO2yVNwwOg2Shm0dTZYTYaL4oQAwfhk7CA-X_AyN_g:1swkxV:wyrKjdV2XH5s_NeLpuaEvadPuMM9X_QtmFdBaG4Kzw4",
+    "expire_date": "2024-10-18T16:15:13.652Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "u575d5anlyrvzs2dcuqtrji4bghowecl",
+  "fields": {
+    "session_data": ".eJxVjDsOwjAQBe_iGllZ_7Ap6TmDtV6vcQA5UpxUiLuTSCmgfTPz3iLiutS4dp7jmMVFgDj9bgnpyW0H-YHtPkma2jKPSe6KPGiXtynz63q4fwcVe91qPA9gi8oMRiuNVFJ2xZO2yVNwwOg2Shm0dTZYTYaL4oQAwfhk7CA-X_AyN_g:1svfxM:JbYEtnNBoThAaaL_JzNq_w5t_iyXVV_U3AMKm1dl1dk",
+    "expire_date": "2024-10-15T16:42:36.123Z"
+  }
+},
+{
+  "model": "main.post",
+  "pk": 2,
+  "fields": {
+    "author": 1,
+    "title": "Введение в Python",
+    "text": "Python - это высокоуровневый язык программирования...",
+    "slug": "vvedenie-v-python",
+    "tags": [
+      "основы",
+      "синтаксис",
+      "советы"
+    ],
+    "created_at": "2024-10-01T15:07:43.693Z",
+    "updated_at": "2024-10-04T18:06:49.943Z",
+    "views": 0
+  }
+},
+{
+  "model": "main.post",
+  "pk": 3,
+  "fields": {
+    "author": 1,
+    "title": "Введение в Django",
+    "text": "Django — это веб-фреймворк написанный на языке Python...",
+    "slug": "vvedenie-v-django",
+    "tags": [
+      "django",
+      "веб",
+      "феймворк"
+    ],
+    "created_at": "2024-10-01T15:13:49.386Z",
+    "updated_at": "2024-10-01T15:13:49.386Z",
+    "views": 0
+  }
+},
+{
+  "model": "main.post",
+  "pk": 4,
+  "fields": {
+    "author": 1,
+    "title": "Введение в SQL",
+    "text": "# SQL — это язык запросов к базам данных.\r\n\r\n## Основы SQL\r\n\r\nSQL (Structured Query Language) — это язык программирования, используемый для работы с реляционными базами данных. С помощью SQL можно выполнять разнообразные операции, включая создание, изменение, удаление и выборку данных.\r\n\r\n### Основные операторы SQL\r\n\r\nВот некоторые из основных команд SQL:\r\n\r\n- **SELECT**: выбирает данные из базы данных.\r\n- **INSERT**: добавляет данные в таблицу.\r\n- **UPDATE**: изменяет существующие данные.\r\n- **DELETE**: удаляет данные из таблицы.\r\n\r\n### Пример использования\r\n\r\nРассмотрим простой пример базы данных для хранения информации о пользователях. Ниже приведены SQL-запросы, которые демонстрируют основные операции:\r\n\r\nСоздание таблицы\r\n```sql\r\nCREATE TABLE users (\r\nid INT PRIMARY KEY AUTO_INCREMENT,\r\nusername VARCHAR(50) NOT NULL,\r\nemail VARCHAR(100) NOT NULL,\r\ncreated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP\r\n);\r\n```\r\n\r\nВставка данных\r\n```sql\r\nINSERT INTO users (username, email) VALUES ('john_doe', 'john@example.com');\r\nINSERT INTO users (username, email) VALUES ('jane_doe', 'jane@example.com');\r\n```\r\n\r\nВыборка данных\r\n```sql\r\nSELECT * FROM users;\r\n```\r\n\r\nОбновление данных\r\n```sql\r\nUPDATE users SET email = 'john.doe@example.com' WHERE username = 'john_doe';\r\n```\r\n\r\nУдаление данных\r\n``sql\r\nDELETE FROM users WHERE username = 'jane_doe';\r\n```",
+    "slug": "vvedenie-v-sql",
+    "tags": [
+      "sql",
+      "базы данных"
+    ],
+    "created_at": "2024-10-01T15:19:06.299Z",
+    "updated_at": "2024-10-04T18:11:27.309Z",
+    "views": 0
+  }
+}
+]

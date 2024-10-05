@@ -12,9 +12,9 @@ menu = [
 
 def blog(request):
     context = {
-        'dataset': dataset,
+        'posts': Post.objects.all(),
         'menu': menu,
-        'page_alias': 'blog'   
+        'page_alias': 'blog'
     }
 
     return render(request, template_name='main/blog.html', context=context)
@@ -48,7 +48,7 @@ def post_by_slug(request, slug):
     context = {
         'title': post.title,
         'text': post.text,
-        'hashtags': post.tags,
+        'hashtags': post.tags.all(),
         'created_at': post.created_at,
         'updated_at': post.updated_at
     }
@@ -87,3 +87,12 @@ def add_post(request):
             context.update({'message': 'Заполните все поля'})
 
             return render(request, 'main/add_post.html', context=context)
+        
+def posts_by_tag(request, tag):
+    context = {
+        'menu': menu,
+        'page_alias': 'blog', 
+        'posts': Post.objects.filter(tags__slug=tag)
+    }
+
+    return render(request, 'main/blog.html', context=context)

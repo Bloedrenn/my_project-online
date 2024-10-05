@@ -11,7 +11,7 @@ class Post(models.Model):
     title = models.CharField(max_length=300, unique=True)
     text = models.TextField()
     slug = models.SlugField(unique=True)
-    tags = models.JSONField(null=True, blank=True, default=list)
+    tags = models.ManyToManyField('Tag', related_name='posts')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     views = models.IntegerField(default=0)
@@ -27,3 +27,17 @@ class Post(models.Model):
     def get_absolute_url(self):
         return reverse('post_by_slug', kwargs={'slug': self.slug})
         # return f'/blog/post/{self.slug}/view/'
+
+
+class Tag(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    slug = models.SlugField(unique=True, editable=False)
+
+    def save(self, *args, **kwargs):
+        self.name = self.name.lower().replace(' ', '_')
+        self.slug = slugify(unidecode(self.name))
+
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f'#{self.name}'

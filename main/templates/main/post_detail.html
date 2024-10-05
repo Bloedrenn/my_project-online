@@ -1,14 +1,15 @@
 {% extends "base.html" %}
+{% load md_to_html %}
 
 {% block title %}{{ title }}{% endblock %}
 
 {% block content %}
 <div class="container my-5">
-    <h1>Заголовок поста - {{ title }}</h1>
-    <p>Текст поста - {{ text }}</p>
+    <h1>{{ title }}</h1> <!-- Заголовок поста -->
+    <p>{% md_to_html text %}</p> <!-- Текст поста -->
     <p>Теги:
     {% for hashtag in hashtags %}
-        <span class="hashtag">#{{ hashtag }}</span>
+        <span class="hashtag"><a href="{% url 'posts_by_tag' hashtag.slug %}">{{ hashtag }}</a></span>
     {% endfor %}
     </p>
     <p>Время создания поста - {{ created_at }}</p>
