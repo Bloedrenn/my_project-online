@@ -1,14 +1,31 @@
+{% load static %}
+
 <div class="card mb-3">
-    <div class="card-body">
-        <h5 class="card-title">{{ post.title }}</h5>
-        <p class="card-text">
-            {{ post.text }}
-        </p>
-        <p class="card-text">
-            {% for hashtag in post.tags.all %}
-            <span class="hashtag">{{ hashtag }}</span>
-            {% endfor %}
-        </p>
-        <a href="{% url 'post_by_slug' post.slug %}" class="btn btn-primary">Читать пост</a>
+    <div class="row g-0">
+        <div class="col-md-4">
+            {% if post.cover_image %}
+                <img src="{{ post.cover_image.url }}" class="img-fluid rounded-start" alt="{{ post.title }}">
+            {% else %}
+                <img src="{% static 'images/no_image.jpg' %}" class="img-fluid rounded-start" alt="No image">
+            {% endif %}
+        </div>
+        <div class="col-md-8">
+            <div class="card-body">
+                <h5 class="card-title">{{ post.title }}</h5>
+                <p class="card-text">
+                    {% if post.category %}
+                    <span class="category">Категория: <a href="{% url 'posts_by_category' post.category.slug %}">{{ post.category }}</a></span>
+                    {% else %}
+                    <span class="category">Без категории</span>
+                    {% endif %}
+                </p>
+                <p class="card-text">
+                    {% for hashtag in post.tags.all %}
+                    <span class="hashtag"><a href="{{ hashtag.get_absolute_url }}">{{ hashtag }}</a></span>
+                    {% endfor %}
+                </p>
+                <a href="{% url 'post_by_slug' post.slug %}" class="btn btn-primary">Читать пост</a>
+            </div>
+        </div>
     </div>
 </div>
