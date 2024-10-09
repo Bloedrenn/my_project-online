@@ -1,6 +1,11 @@
-from django.shortcuts import render, HttpResponse, get_object_or_404
+from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from .dataset import dataset
-from .models import Post, Category
+from .models import Post, Category, Tag
+
+from django.http import JsonResponse
+# from django.views.decorators.csrf import csrf_exempt
+import json
+from .templatetags.md_to_html import markdown_to_html
 
 menu = [
     {"name": "Главная", "alias": "main"},
@@ -11,8 +16,15 @@ menu = [
 
 
 def blog(request):
+    search_query = request.GET.get('search', '')
+
+    if search_query:
+        posts = Post.objects.filter(text__icontains=search_query)
+    else:
+        posts = Post.objects.filter(status="published").order_by('-created_at')
+
     context = {
-        'posts': Post.objects.all(),
+        'posts': posts,
         'menu': menu,
         'page_alias': 'blog'
     }
@@ -71,14 +83,20 @@ def add_post(request):
         author = request.user
         title = request.POST['title']
         text = request.POST['text']
+        tags = request.POST['tags']
 
         if title and text:
             if not Post.objects.filter(title=title).exists():
-                Post.objects.create(author=author, title=title, text=text)
+                post = Post.objects.create(author=author, title=title, text=text)
+
+                tag_list = [tag.strip().lower().replace(' ', '_') for tag in tags.split(',') if tag.strip()]
+                for tag in tag_list:
+                    tag, created = Tag.objects.get_or_create(name=tag)
+                    post.tags.add(tag)
 
                 context['message'] = 'Пост успешно добавлен'
 
-                return render(request, 'main/add_post.html', context=context)
+                return redirect('post_by_slug', slug=post.slug)
             else:
                 context['message'] = 'Такой пост уже существует'
 
@@ -107,3 +125,11 @@ def posts_by_tag(request, tag):
     }
 
     return render(request, 'main/blog.html', context=context)
+
+# @csrf_exempt # Отключает проверку CSRF токена при пост запросах для этой вью
+def preview_post(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        text = data.get('text', '')
+        html = markdown_to_html(text)
+        return JsonResponse({'html': html})
