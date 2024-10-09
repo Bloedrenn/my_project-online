@@ -1,5 +1,5 @@
 from django.db import models
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.contrib.auth import get_user_model
 from django.utils.text import slugify
 from unidecode import unidecode
@@ -64,7 +64,7 @@ class Tag(models.Model):
         return f'#{self.name}'
 
     def get_absolute_url(self):
-        url = reverse('posts_by_tag', args=[self.slug])
+        url = reverse_lazy('posts_by_tag', args=[self.slug])
         return url
 
 
