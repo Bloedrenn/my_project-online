@@ -7,6 +7,8 @@ from django.http import JsonResponse
 import json
 from .templatetags.md_to_html import markdown_to_html
 
+from django.db.models import F, Q
+
 menu = [
     {"name": "Главная", "alias": "main"},
     {"name": "Блог", "alias": "blog"},
@@ -17,11 +19,27 @@ menu = [
 
 def blog(request):
     search_query = request.GET.get('search', '')
+    search_category = request.GET.get("search_category")
+    search_tag = request.GET.get("search_tag")
+    # search_comments = request.GET.get("search_comments")
+
+    posts = Post.objects.filter(status="published")
 
     if search_query:
-        posts = Post.objects.filter(text__icontains=search_query)
-    else:
-        posts = Post.objects.filter(status="published").order_by('-created_at')
+        query = Q(title__icontains=search_query) | Q(text__icontains=search_query) 
+        
+        if search_category:
+            query |= Q(category__name__icontains=search_query)
+        
+        if search_tag:
+            query |= Q(tags__name__icontains=search_query)
+        
+        # if search_comments:
+        #     query |= Q(comment__text__icontains=search_query)
+        
+        posts = posts.filter(query)
+
+    posts = posts.distinct().order_by("-created_at")
 
     context = {
         'posts': posts,
@@ -30,6 +48,7 @@ def blog(request):
     }
 
     return render(request, template_name='main/blog.html', context=context)
+
 
 def main(request):
     context = {
@@ -57,16 +76,13 @@ def post_by_slug(request, slug):
 
     post = get_object_or_404(Post, slug=slug)
 
-    context = {
-        'title': post.title,
-        'text': post.text,
-        'hashtags': post.tags.all(),
-        'created_at': post.created_at,
-        'updated_at': post.updated_at
-    }
+    Post.objects.filter(slug=slug).update(views=F('views') + 1)
 
-    context['menu'] = menu
-    context['page_alias'] = 'blog'
+    context = {
+        'post': post,
+        'menu': menu,
+        'page_alias': 'blog'
+    }
     
     return render(request, 'main/post_detail.html', context=context)
 
