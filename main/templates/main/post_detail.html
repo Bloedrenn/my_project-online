@@ -5,14 +5,19 @@
 
 {% block content %}
 <div class="container my-5">
+
     <!-- Кнопка "Назад" -->
     <div class="mb-4">
         <a href="{% url 'blog' %}" class="btn btn-secondary">
-            <span class="d-none d-sm-inline">
-                <i class="bi bi-arrow-left-circle me-2"></i>Назад
-            </span>
+        <span class="d-none d-sm-inline">
+            <i class="bi bi-arrow-left-circle me-2"></i> Назад
+        </span>
+        <span class="d-inline d-sm-none">
+            <i class="bi bi-arrow-left-circle"></i>
+        </span>
         </a>
     </div>
+
     {% comment %} Отображение обложки, если она есть {% endcomment %}
     {% if post.cover_image %}
     <div class="text-center mb-4">
@@ -28,8 +33,14 @@
             <i class="bi bi-person-circle me-1"></i> {{ post.author }}
         </div>
         <div class="me-3">
-            <i class="bi bi-eye me-1"></i>
-            <span class="d-none d-sm-inline">{{ post.views }} просмотр{{ post.views|pluralize:"ов,а,ов" }}</span>
+            <span class="d-none d-sm-inline">
+                <i class="bi bi-eye me-1"></i>
+                {{ post.views }} просмотр{{ post.views|pluralize:"ов,а,ов" }}
+            </span>
+            <span class="d-inline d-sm-none">
+                <i class="bi bi-eye"></i>
+                {{ post.views }}
+            </span>
         </div>
         {% if post.category %}
             <div class="me-3">
