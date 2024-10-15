@@ -4,6 +4,8 @@ from django.contrib.auth import get_user_model
 from django.utils.text import slugify
 from unidecode import unidecode
 
+from django.core.cache import cache
+from django.core.cache.utils import make_template_fragment_key
 # Create your models here.
 
 class Post(models.Model):
@@ -31,6 +33,16 @@ class Post(models.Model):
         self.slug = slugify(unidecode(self.title))
 
         super().save(*args, **kwargs)
+
+        # Работа с кешированием
+        # Сброс кеша превью поста
+        key = make_template_fragment_key("post_preview", [self.id])
+        cache.delete(key)
+        # Сброс кеша детального просмотра поста
+        key = make_template_fragment_key("post_detail", [self.id])
+        cache.delete(key)
+        # # Сброс кеша списка постов (можно сбросить весь кеш каталога или определенные страницы)
+        # cache.delete('blog_post_list')
     
     def get_absolute_url(self):
         return reverse('post_by_slug', kwargs={'slug': self.slug})
@@ -77,7 +89,7 @@ class Comment(models.Model):
 
     text = models.TextField(max_length=2000)
     status = models.CharField(max_length=9, choices=STATUS_CHOICES, default='unchecked')
-    author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='comments')
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

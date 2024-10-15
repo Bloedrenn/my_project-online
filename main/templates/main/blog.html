@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% comment %} {% load cache %} {% endcomment %}
 
 {% block title %}Каталог постов{% endblock %}
 
@@ -9,6 +10,7 @@
 
     {% include 'main/search_form.html' %}
 
+    {% comment %} {% cache 60 blog_post_list page_obj.number %} {% endcomment %} {% comment %} page_obj.number - пока не используем {% endcomment %}
     <div class="row">
         {% for post in posts %}
             {% if post.status == 'published' %}
@@ -22,5 +24,6 @@
             </div>
         {% endfor %}
     </div>
+    {% comment %} {% endcache %} {% endcomment %}
 </div>
 {% endblock %}

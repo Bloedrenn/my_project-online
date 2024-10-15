@@ -9,6 +9,12 @@ from .templatetags.md_to_html import markdown_to_html
 
 from django.db.models import F, Q
 
+from .forms import CommentForm
+from django.contrib import messages
+
+# from django.core.cache import cache
+# from django.core.cache.utils import make_template_fragment_key
+
 menu = [
     {"name": "Главная", "alias": "main"},
     {"name": "Блог", "alias": "blog"},
@@ -23,7 +29,7 @@ def blog(request):
     search_tag = request.GET.get("search_tag")
     # search_comments = request.GET.get("search_comments")
 
-    posts = Post.objects.filter(status="published")
+    posts = Post.objects.prefetch_related('tags').select_related('author').select_related('category').filter(status="published")
 
     if search_query:
         query = Q(title__icontains=search_query) | Q(text__icontains=search_query) 
@@ -77,11 +83,38 @@ def post_by_slug(request, slug):
     post = get_object_or_404(Post, slug=slug)
 
     Post.objects.filter(slug=slug).update(views=F('views') + 1)
+    # Как обновить кеш только там где нужно?
+    # key = make_template_fragment_key("post_preview", [post.id])
+    # cache.delete(key)
+    # key = make_template_fragment_key("post_detail", [post.id])
+    # cache.delete(key)
+
+    if request.method == 'POST':
+        if request.user.is_authenticated:
+            form = CommentForm(request.POST)
+            if form.is_valid():
+                # Создаем комментарий, но пока не сохраняем в базу
+                comment = form.save(commit=False)
+                comment.post = post
+                comment.author = request.user
+                comment.save()
+                messages.success(request, 'Ваш комментарий находится на модерации.')
+                return redirect('post_by_slug', slug=slug)
+        else:
+            messages.error(request, 'Для добавления комментария необходимо войти в систему.')
+            return redirect('login')
+    else:
+        form = CommentForm()
+
+    # Выбираем только одобренные комментарии
+    comments = post.comments.filter(status='accepted')
 
     context = {
         'post': post,
         'menu': menu,
-        'page_alias': 'blog'
+        'page_alias': 'blog',
+        'form': form,
+        'comments': comments,
     }
     
     return render(request, 'main/post_detail.html', context=context)
