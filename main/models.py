@@ -18,7 +18,7 @@ class Post(models.Model):
     title = models.CharField(max_length=300, unique=True)
     text = models.TextField()
     cover_image = models.ImageField(blank=True, null=True, upload_to='images/')
-    slug = models.SlugField(unique=True)
+    slug = models.SlugField(editable=False, unique=True)
     category = models.ForeignKey('Category', related_name='posts', blank=True, null=True, on_delete=models.CASCADE)
     tags = models.ManyToManyField('Tag', related_name='posts')
     created_at = models.DateTimeField(auto_now_add=True)

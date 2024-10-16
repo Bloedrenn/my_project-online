@@ -77,14 +77,20 @@
             {% endfor %}
         </div>
     </div>
+    {% endcache %}
 
     <!-- Комментарии -->
     <div class="mb-4">
         <h3>Комментарии</h3>
-        {% if comments %}
-        {% for comment in comments %}
-            {% include 'main/comment.html' %}
-        {% endfor %}
+        {% if paginated_comments %}
+            {% for comment in paginated_comments %}
+                {% include 'main/comment.html' %}
+            {% endfor %}
+
+            
+            {% if paginated_comments.has_other_pages %}
+                {% include 'main/pagination_include.html' with page_obj=paginated_comments %}
+            {% endif %}
         {% else %}
         <p>Пока нет комментариев. Будьте первым!</p>
         {% endif %}
@@ -98,12 +104,11 @@
             {% csrf_token %}
             
             {{ form.as_p }}
-            <button type="submit" class="btn btn-primary">Отправить</button>
+            <button type="submit" class="btn btn-dark">Отправить</button>
         </form>
         {% else %}
         <p>Пожалуйста, <a href="{% url 'login' %}">войдите</a>, чтобы оставить комментарий.</p>
         {% endif %}
     </div>
-    {% endcache %}
 </div>
 {% endblock %}
