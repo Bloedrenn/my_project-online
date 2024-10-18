@@ -9,7 +9,7 @@ from .templatetags.md_to_html import markdown_to_html
 
 from django.db.models import F, Q
 
-from .forms import CommentForm
+from .forms import CommentForm, CategoryForm, TagForm
 from django.contrib import messages
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -93,6 +93,16 @@ def post_by_slug(request, slug):
     #     return HttpResponse('404 - Пост не найден', status=404)
 
     post = get_object_or_404(Post, slug=slug)
+
+    # Простой вариант увеличения просмотров (1)
+    # post.views = F('views') + 1
+    # post.save(update_fields=['views'])
+    
+    # Проверяем, был ли уже просмотр поста в текущей сессии (2)
+    # if f'post_{post.id}_viewed' not in request.session:
+    #     post.views = F('views') + 1
+    #     post.save(update_fields=['views'])
+    #     request.session[f'post_{post.id}_viewed'] = True
 
     Post.objects.filter(slug=slug).update(views=F('views') + 1)
     # Как обновить кеш только там где нужно?
@@ -202,3 +212,61 @@ def preview_post(request):
         text = data.get('text', '')
         html = markdown_to_html(text)
         return JsonResponse({'html': html})
+
+
+def add_category(request):
+    context = {"menu": menu}
+    if request.method == "GET":
+        form = CategoryForm()
+        context["form"] = form
+        return render(request, "main/add_category.html", context)
+    
+    elif request.method == "POST":
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            # # Добавим проверку, существует ли категория с таким именем (если такой нет в методе clean в forms.py)
+            # if Category.objects.filter(name=form.cleaned_data['name']).exists():
+            #     # Помещаем ошибку в поле name формы
+            #     form.add_error('name', 'Категория с таким названием уже существует')
+            #     context['form'] = form
+            #     return render(request, "main/add_category.html", context)
+
+            name = form.cleaned_data['name']
+            Category.objects.create(name=name)
+
+            # Добавляем ключ message о том что категория добавлена
+            context["message"] = f"Категория {name} успешно добавлена!"
+            context["form"] = form
+            
+            return render(request, "main/add_category.html", context)
+        
+        context["form"] = form
+        return render(request, "main/add_category.html", context)
+    
+
+def add_tag(request):
+    """
+    Будет использовать форму связанную с моделью Tag - TagForm
+    Шаблон - add_tag.html
+    """
+    context = {"menu": menu}
+    if request.method == "GET":
+        form = TagForm()
+        context["form"] = form
+        return render(request, "main/add_tag.html", context)
+    
+    elif request.method == "POST":
+        form = TagForm(request.POST)
+        if form.is_valid():
+            # Так как форма связана с моделью мы можем использовать метод save() к форме
+            form.save()
+            # Добавляем ключ message о том что тег добавлен
+            name = form.cleaned_data['name']
+
+            context["message"] = f"Тег {name} успешно добавлен!"
+            context["form"] = form
+
+            return render(request, "main/add_tag.html", context)
+        
+        context["form"] = form
+        return render(request, "main/add_tag.html", context)

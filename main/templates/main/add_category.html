@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Добавить категорию{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Добавить новую категорию</h1>
+    <form method="POST">
+        {% csrf_token %}
+
+        {{ form.name.label_tag }}
+
+        {{ form.name }}
+
+        {% if form.name.help_text %}
+            <p><small class="form-text text-muted">{{ form.name.help_text }}</small></p>
+        {% endif %}
+
+        {% if form.name.errors %}
+            <div class="alert alert-danger m-1">
+                {% for error in form.name.errors %}
+                    {{ error }}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% comment %} Ещё варинт как вытащить поля из формы:
+        {% for field in form %}
+            {{ field.label_tag }}
+
+            {{ field }}
+
+            {{ field.help_text }}
+
+            {% if field.errors %}
+                <div class="alert alert-danger m-1">
+                    {{ field.errors }}
+                </div>
+            {% endif %}
+        {% endfor %}
+        {% endcomment %}
+
+        {% comment %} Сообщение об успехе {% endcomment %}
+        {% if message %}
+            <p class="mt-3 alert alert-success">{{ message }}</p>
+        {% endif %}
+        
+        <button type="submit" class="btn btn-dark mt-3">Добавить</button>
+    </form>
+
+    {% comment %} {% if form.non_field_errors %}
+        <div class="alert alert-danger mt-3">
+            {% for error in form.non_field_errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+    {% endif %} {% endcomment %}
+</div>
+{% endblock %}
