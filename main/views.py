@@ -216,32 +216,25 @@ def preview_post(request):
 
 def add_category(request):
     context = {"menu": menu}
-    if request.method == "GET":
-        form = CategoryForm()
-        context["form"] = form
-        return render(request, "main/add_category.html", context)
     
-    elif request.method == "POST":
+    if request.method == "POST":
         form = CategoryForm(request.POST)
         if form.is_valid():
-            # # Добавим проверку, существует ли категория с таким именем (если такой нет в методе clean в forms.py)
-            # if Category.objects.filter(name=form.cleaned_data['name']).exists():
-            #     # Помещаем ошибку в поле name формы
-            #     form.add_error('name', 'Категория с таким названием уже существует')
-            #     context['form'] = form
-            #     return render(request, "main/add_category.html", context)
-
-            name = form.cleaned_data['name']
-            Category.objects.create(name=name)
-
-            # Добавляем ключ message о том что категория добавлена
-            context["message"] = f"Категория {name} успешно добавлена!"
-            context["form"] = form
-            
-            return render(request, "main/add_category.html", context)
-        
-        context["form"] = form
-        return render(request, "main/add_category.html", context)
+            form.save()
+            messages.success(request, f"Категория '{form.cleaned_data['name']}' успешно добавлена!")
+            return redirect('add_category')
+        else:
+            messages.error(request, "Пожалуйста, исправьте ошибки ниже.")
+    else:
+        form = CategoryForm()
+    
+    context.update({
+        "form": form,
+        "operation_title": "Добавить категорию",
+        "operation_header": "Добавить новую категорию",
+        "submit_button_text": "Создать",
+    })
+    return render(request, "main/category_form.html", context)
     
 
 def add_tag(request):
@@ -273,44 +266,25 @@ def add_tag(request):
 
 
 def update_category(request, category_slug):
-    """
-    Вью для обновления названия категории.
-    """
-    # Получаем объект категории по слагу
     category = get_object_or_404(Category, slug=category_slug)
-    
+    context = {"menu": menu}
+
     if request.method == "POST":
-        new_name = request.POST.get('name', '').strip()
-        
-        if not new_name:
-            messages.error(request, "Название категории не может быть пустым.")
-
-            context = {
-                'menu': menu
-            }
-    
-            return render(request, 'main/update_category.html', context)
+        category_name = category.name
+        form = CategoryForm(request.POST, instance=category)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"Категория '{category_name}' успешно обновлена.")
+            return redirect('update_category', category_slug=category.slug)
         else:
-            # Проверяем, существует ли уже категория с таким названием
-            if Category.objects.filter(name__iexact=new_name).exists():
-                messages.error(request, f"Категория с названием '{new_name}' уже существует.")
-
-                context = {
-                    'menu': menu
-                }
+            messages.error(request, "Пожалуйста, исправьте ошибки ниже.")
+    else:
+        form = CategoryForm(instance=category)
     
-                return render(request, 'main/update_category.html', context)
-            else:
-                messages.success(request, f"Название категории {category} успешно изменено на {new_name}.")
-
-                category.name = new_name
-                category.save()
-
-                return redirect('update_category', category.slug)
-    
-    context = {
-        'menu': menu,
-        'category': category,
-    }
-
-    return render(request, 'main/update_category.html', context)
+    context.update({
+        "form": form,
+        "operation_title": "Обновить категорию",
+        "operation_header": "Обновить категорию",
+        "submit_button_text": "Сохранить",
+    })
+    return render(request, "main/category_form.html", context)

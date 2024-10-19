@@ -13,17 +13,22 @@ class CommentForm(forms.ModelForm):
         }
 
 
-# форма не связанная с моделью
-class CategoryForm(forms.Form):
-    name = forms.CharField(
-        max_length=200,
-        min_length=2,
-        label='Название категории',
-        required=True,
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Введите название категории'}),
-        help_text='Введите название категории (от 2 до 200 символов)'
-    )
-    
+class CategoryForm(forms.ModelForm):
+    class Meta:
+        model = Category
+
+        fields = ['name']
+
+        labels = {
+            'name': 'Название категории'
+        }
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Введите название категории'})
+        }
+        help_texts = {
+            'name': 'Введите название категории (от 2 до 200 символов)'
+        }
+
     def clean_name(self):
         name = self.cleaned_data['name']
         if Category.objects.filter(name=name).exists():

@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 
-{% block title %}Обновить категорию{% endblock %}
+{% block title %}{{ operation_title }}{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
-    <h2>Обновить категорию</h2>
+    <h1>{{ operation_header }}</h1>
     
     {% if messages %}
         {% for message in messages %}
@@ -18,12 +18,8 @@
     <form method="POST">
         {% csrf_token %}
 
-        <div class="mb-3">
-            <label for="name" class="form-label">Название категории</label>
-            <input type="text" class="form-control" name="name" value="{{ category.name }}">
-        </div>
-
-        <button type="submit" class="btn btn-dark">Сохранить</button>
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-dark">{{ submit_button_text }}</button>
     </form>
 </div>
 {% endblock %}
