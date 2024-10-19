@@ -190,7 +190,7 @@ def posts_by_category(request, category):
     context = {
         'menu': menu,
         'page_alias': 'blog', 
-        'posts': Category.objects.get(slug=category).posts.all()
+        'paginated_posts': Category.objects.get(slug=category).posts.all() # Сделать пагинацию
     }
 
     return render(request, 'main/blog.html', context=context)
@@ -275,7 +275,8 @@ def update_category(request, category_slug):
         if form.is_valid():
             form.save()
             messages.success(request, f"Категория '{category_name}' успешно обновлена.")
-            return redirect('update_category', category_slug=category.slug)
+            return redirect('posts_by_category', category=category.slug)
+            # return redirect('update_category', category_slug=category.slug)
         else:
             messages.error(request, "Пожалуйста, исправьте ошибки ниже.")
     else:
