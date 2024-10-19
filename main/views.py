@@ -270,3 +270,47 @@ def add_tag(request):
         
         context["form"] = form
         return render(request, "main/add_tag.html", context)
+
+
+def update_category(request, category_slug):
+    """
+    Вью для обновления названия категории.
+    """
+    # Получаем объект категории по слагу
+    category = get_object_or_404(Category, slug=category_slug)
+    
+    if request.method == "POST":
+        new_name = request.POST.get('name', '').strip()
+        
+        if not new_name:
+            messages.error(request, "Название категории не может быть пустым.")
+
+            context = {
+                'menu': menu
+            }
+    
+            return render(request, 'main/update_category.html', context)
+        else:
+            # Проверяем, существует ли уже категория с таким названием
+            if Category.objects.filter(name__iexact=new_name).exists():
+                messages.error(request, f"Категория с названием '{new_name}' уже существует.")
+
+                context = {
+                    'menu': menu
+                }
+    
+                return render(request, 'main/update_category.html', context)
+            else:
+                messages.success(request, f"Название категории {category} успешно изменено на {new_name}.")
+
+                category.name = new_name
+                category.save()
+
+                return redirect('update_category', category.slug)
+    
+    context = {
+        'menu': menu,
+        'category': category,
+    }
+
+    return render(request, 'main/update_category.html', context)
