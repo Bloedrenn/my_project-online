@@ -9,7 +9,7 @@ from .templatetags.md_to_html import markdown_to_html
 
 from django.db.models import F, Q
 
-from .forms import CommentForm, CategoryForm, TagForm
+from .forms import CommentForm, CategoryForm, TagForm, PostForm
 from django.contrib import messages
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -149,42 +149,32 @@ def post_by_slug(request, slug):
     
     return render(request, 'main/post_detail.html', context=context)
 
+
 def add_post(request):
-    context = {
-        'menu': menu,
-        'page_alias': 'add_post'
-    }
+    if request.method == "POST":
+        form = PostForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save(author=request.user)
+            messages.success(request, 'Пост успешно создан и отправлен на модерацию.')
+            return redirect('add_post')
+    else:
+        form = PostForm()
 
-    if request.method == 'GET':
-        return render(request, 'main/add_post.html', context=context)
-    
-    elif request.method == 'POST':
-        author = request.user
-        title = request.POST['title']
-        text = request.POST['text']
-        tags = request.POST['tags']
+    return render(request, 'main/add_post.html', {'form': form, 'menu': menu, 'page_alias': 'add_post'})
 
-        if title and text:
-            if not Post.objects.filter(title=title).exists():
-                post = Post.objects.create(author=author, title=title, text=text)
 
-                tag_list = [tag.strip().lower().replace(' ', '_') for tag in tags.split(',') if tag.strip()]
-                for tag in tag_list:
-                    tag, created = Tag.objects.get_or_create(name=tag)
-                    post.tags.add(tag)
+def update_post(request, post_slug):
+    post = get_object_or_404(Post, slug=post_slug)
+    if request.method == "POST":
+        form = PostForm(request.POST, request.FILES, instance=post)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Пост успешно обновлен и отправлен на модерацию.')
+            return redirect('update_post', post_slug=post_slug)
+    else:
+        form = PostForm(instance=post)
+    return render(request, 'main/add_post.html', {'form': form, 'menu': menu})
 
-                context['message'] = 'Пост успешно добавлен'
-
-                return redirect('post_by_slug', slug=post.slug)
-            else:
-                context['message'] = 'Такой пост уже существует'
-
-                return render(request, 'main/add_post.html', context=context)
-        else:
-            context.update({'message': 'Заполните все поля'})
-
-            return render(request, 'main/add_post.html', context=context)
-        
 
 def posts_by_category(request, category):
     context = {
