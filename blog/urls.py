@@ -19,11 +19,13 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-import main.urls as main_urls
+from main.views import main
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include(main_urls)),
+
+    path('', main, name='main'),
+    path('blog/', include('main.urls')),
     path('users/', include('users.urls'))
 ]
 
