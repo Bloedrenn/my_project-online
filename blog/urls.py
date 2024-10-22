@@ -23,7 +23,8 @@ import main.urls as main_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include(main_urls))
+    path('', include(main_urls)),
+    path('users/', include('users.urls'))
 ]
 
 if settings.DEBUG:
