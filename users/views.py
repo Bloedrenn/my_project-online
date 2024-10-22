@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from .forms import UserRegisterForm, UserLoginForm
 from django.contrib import messages
+from blog.settings import LOGIN_REDIRECT_URL
 
 
 def register(request):
@@ -29,7 +30,8 @@ def log_in(request):
             if user is not None:
                 login(request, user)
                 messages.info(request, f'Вы успешно вошли как {username}.')
-                return redirect('main')
+
+                return redirect(request.GET.get('next', LOGIN_REDIRECT_URL))
             else:
                 messages.error(request, 'Неверное имя пользователя или пароль.')
         else:

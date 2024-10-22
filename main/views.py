@@ -14,6 +14,8 @@ from django.contrib import messages
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
+from django.contrib.auth.decorators import login_required, permission_required
+
 # from django.core.cache import cache
 # from django.core.cache.utils import make_template_fragment_key
 
@@ -150,6 +152,7 @@ def post_by_slug(request, slug):
     return render(request, 'main/post_detail.html', context=context)
 
 
+@login_required
 def add_post(request):
     if request.method == "POST":
         form = PostForm(request.POST, request.FILES)
@@ -163,6 +166,7 @@ def add_post(request):
     return render(request, 'main/add_post.html', {'form': form, 'menu': menu, 'page_alias': 'add_post'})
 
 
+@login_required
 def update_post(request, post_slug):
     post = get_object_or_404(Post, slug=post_slug)
     if request.method == "POST":
@@ -204,6 +208,7 @@ def preview_post(request):
         return JsonResponse({'html': html})
 
 
+@login_required
 def add_category(request):
     context = {"menu": menu}
     
@@ -227,6 +232,7 @@ def add_category(request):
     return render(request, "main/category_form.html", context)
     
 
+@login_required
 def add_tag(request):
     """
     Будет использовать форму связанную с моделью Tag - TagForm
@@ -255,6 +261,7 @@ def add_tag(request):
         return render(request, "main/add_tag.html", context)
 
 
+@login_required
 def update_category(request, category_slug):
     category = get_object_or_404(Category, slug=category_slug)
     context = {"menu": menu}
