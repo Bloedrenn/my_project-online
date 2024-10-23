@@ -115,7 +115,7 @@
             <button type="submit" class="btn btn-dark">Отправить</button>
         </form>
         {% else %}
-        <p>Пожалуйста, <a href="{% url 'log_in' %}">войдите</a>, чтобы оставить комментарий.</p>
+        <p>Пожалуйста, <a href="{% url 'log_in' %}?next={{ request.path }}">войдите</a>, чтобы оставить комментарий.</p>
         {% endif %}
     </div>
 </div>
