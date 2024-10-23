@@ -88,30 +88,13 @@ def about(request):
 
 
 def post_by_slug(request, slug):
-    # posts = Post.objects.all()
-    # post = [post for post in posts if post.slug == slug][0]
-
-    # if not post:
-    #     return HttpResponse('404 - Пост не найден', status=404)
-
     post = get_object_or_404(Post, slug=slug)
-
-    # Простой вариант увеличения просмотров (1)
-    # post.views = F('views') + 1
-    # post.save(update_fields=['views'])
     
-    # Проверяем, был ли уже просмотр поста в текущей сессии (2)
-    # if f'post_{post.id}_viewed' not in request.session:
-    #     post.views = F('views') + 1
-    #     post.save(update_fields=['views'])
-    #     request.session[f'post_{post.id}_viewed'] = True
-
-    Post.objects.filter(slug=slug).update(views=F('views') + 1)
-    # Как обновить кеш только там где нужно?
-    # key = make_template_fragment_key("post_preview", [post.id])
-    # cache.delete(key)
-    # key = make_template_fragment_key("post_detail", [post.id])
-    # cache.delete(key)
+    # Проверяем, есть ли ключ 'post_{post.id}_viewed' в словаре session в текущей сессии, если нет то добавляем
+    # И увеличиваем views на 1
+    if f'post_{post.id}_viewed' not in request.session:
+        Post.objects.filter(id=post.id).update(views=F('views') + 1)
+        request.session[f'post_{post.id}_viewed'] = True
 
     if request.method == 'POST':
         if request.user.is_authenticated:
