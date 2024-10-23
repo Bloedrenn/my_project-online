@@ -22,7 +22,7 @@
 
     {% comment %} Отображение обложки, если она есть {% endcomment %}
     {% if post.cover_image %}
-    <div class="text-center mb-4">
+    <div class="post-image-container text-center mb-4">
         <img src="{{ post.cover_image.url }}" class="img-fluid rounded" alt="Обложка поста">
     </div>
     {% endif %}
