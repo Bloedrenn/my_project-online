@@ -29,6 +29,14 @@
 
     <h1 class="mb-2">{{ post.title }}</h1>
 
+    {% if user.is_staff %}
+        <div class="mb-4">
+            <a href="{% url 'update_post' post.slug %}" class="btn btn-outline-dark">
+                <i class="bi bi-pencil"></i> Редактировать пост
+            </a>
+        </div>
+    {% endif %}
+
     {% comment %} Информация о посте {% endcomment %}
     <div class="d-flex flex-wrap align-items-center mb-4 bg-light p-3 rounded">
         <div class="me-3">
