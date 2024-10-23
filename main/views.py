@@ -54,7 +54,7 @@ def blog(request):
 
     posts = posts.distinct().order_by("-created_at")
 
-    paginator = Paginator(posts, 2) # первый аргумент - кверисет, второй - сколько объектов на странице
+    paginator = Paginator(posts, 4) # первый аргумент - кверисет, второй - сколько объектов на странице
     try:
         paginated_posts = paginator.page(page_number)
     except PageNotAnInteger:
@@ -129,8 +129,8 @@ def post_by_slug(request, post_slug):
         form = CommentForm()
 
     # Пагинация комментариев
-    comments = post.comments.filter(status='accepted').order_by('-created_at')
-    paginator = Paginator(comments, 2)  # 2 комментариев на страницу
+    comments = post.comments.filter(status='accepted').order_by('created_at')
+    paginator = Paginator(comments, 20)  # 20 комментариев на страницу
     page_number = request.GET.get('page', 1)
     try:
         paginated_comments = paginator.page(page_number)
