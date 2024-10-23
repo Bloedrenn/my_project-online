@@ -35,7 +35,7 @@ def blog(request):
 
     page_number = request.GET.get('page', 1)  # Получаем номер страницы из URL-параметра 'page' /blog/?page=2
 
-    posts = Post.objects.prefetch_related('tags').select_related('author').select_related('category').filter(status="published")
+    posts = Post.objects.prefetch_related('tags', 'comments').select_related('author', 'category').filter(status="published")
 
     if search_query:
         query = Q(title__icontains=search_query) | Q(text__icontains=search_query) 
