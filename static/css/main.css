@@ -70,17 +70,40 @@ footer {
 .pagination {
   margin-top: 20px;
 }
+
+/* Стиль для ссылок пагинатора */
 .page-link {
   color: #343a40;
   background-color: #fff;
   border: 1px solid #dee2e6;
 }
+
+/* Стиль для активной страницы пагинатора */
 .page-item.active .page-link {
   background-color: #343a40;
   border-color: #343a40;
 }
+
+/* Эффект при наведении на ссылку пагинатора */
 .page-link:hover {
   color: #fff;
   background-color: #343a40;
   border-color: #343a40;
+}
+
+/* Контейнер для квадратного изображения */
+.square-image-container {
+  width: 100%;
+  padding-bottom: 100%; /* Создает квадратный контейнер */
+  position: relative;
+  overflow: hidden;
+}
+/* Стиль для изображения внутри квадратного контейнера */
+.square-image-container img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Заполняет контейнер, сохраняя пропорции */
 }
