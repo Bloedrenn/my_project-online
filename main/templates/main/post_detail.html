@@ -4,26 +4,10 @@
 
 {% block title %}{{ post.title }}{% endblock %}
 
-{% block breadcrumbs %}
-    {% include 'breadcrumbs.html' %}
-{% endblock %}
-
 {% block content %}
 <div class="container my-5">
 
     {% cache 60 post_detail post.id %}
-    <!-- Кнопка "Назад" -->
-    <div class="mb-4">
-        <a href="{% url 'blog' %}" class="btn btn-secondary">
-        <span class="d-none d-sm-inline">
-            <i class="bi bi-arrow-left-circle me-2"></i> Назад
-        </span>
-        <span class="d-inline d-sm-none">
-            <i class="bi bi-arrow-left-circle"></i>
-        </span>
-        </a>
-    </div>
-
     {% comment %} Отображение обложки, если она есть {% endcomment %}
     {% if post.cover_image %}
     <div class="post-image-container text-center mb-4">
@@ -33,13 +17,27 @@
 
     <h1 class="mb-2">{{ post.title }}</h1>
 
-    {% if user.is_staff %}
-        <div class="mb-4">
+    {% include 'breadcrumbs.html' %}
+
+    <!-- Контейнер для кнопок -->
+    <div class="mb-2 d-flex">
+        <!-- Кнопка "Назад" для возврата к списку постов -->
+        <a href="{% url 'blog' %}" class="btn btn-secondary me-2">
+            <span class="d-none d-sm-inline">
+                <i class="bi bi-arrow-left-circle me-1"></i> Назад
+            </span>
+            <span class="d-inline d-sm-none">
+                <i class="bi bi-arrow-left-circle"></i>
+            </span>
+        </a>
+
+        <!-- Кнопка редактирования поста, доступная только для администраторов -->
+        {% if user.is_staff %}
             <a href="{% url 'update_post' post.slug %}" class="btn btn-outline-dark">
-                <i class="bi bi-pencil"></i> Редактировать пост
+                <i class="bi bi-pencil me-1"></i> Редактировать пост
             </a>
-        </div>
-    {% endif %}
+        {% endif %}
+    </div>
 
     {% comment %} Информация о посте {% endcomment %}
     <div class="d-flex flex-wrap align-items-center mb-4 bg-light p-3 rounded">
@@ -73,6 +71,9 @@
         </div>
     </div>
 
+    <!-- Разделитель -->
+    <hr class="my-4">
+
     <!-- Текст поста -->
     <div class="post-content mb-4">
         {% md_to_html post.text %}
@@ -90,6 +91,9 @@
         </div>
     </div>
     {% endcache %}
+
+    <!-- Разделитель -->
+    <hr class="my-4">
 
     <!-- Комментарии -->
     <div class="mb-4">
