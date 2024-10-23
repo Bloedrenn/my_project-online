@@ -1,8 +1,15 @@
-<div class="card mb-3">
-    <div class="card-body">
-      <p class="card-text">{{ comment.text }}</p>
-      <p class="card-subtitle text-muted">
-        <small>Автор: {{ comment.author.username }} | {{ comment.created_at|date:"d M Y H:i" }}</small>
-      </p>
-    </div>
+{# Проверка, является ли текущий пользователь автором комментария #}
+{% if user == comment.author %}
+<div class="comment user-comment mb-3 p-3 rounded">
+{% else %}
+<div class="comment other-comment mb-3 p-3 rounded">
+{% endif %}
+  <div class="d-flex justify-content-between align-items-center mb-2">
+    {# Отображение имени автора комментария #}
+    <h6 class="mb-0"><i class="bi bi-person-fill me-1"></i>{{ comment.author.username }}</h6>
+    {# Отображение даты и времени создания комментария #}
+    <small class="text-muted"><i class="bi bi-clock me-1"></i>{{ comment.created_at|date:"d M Y H:i" }}</small>
+  </div>
+  {# Отображение текста комментария #}
+  <p class="mb-0">{{ comment.text }}</p>
 </div>
