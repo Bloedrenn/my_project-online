@@ -87,8 +87,8 @@ def about(request):
     return render(request, template_name='main/about.html', context=context)
 
 
-def post_by_slug(request, slug):
-    post = get_object_or_404(Post, slug=slug)
+def post_by_slug(request, post_slug):
+    post = get_object_or_404(Post, slug=post_slug)
     
     # Проверяем, есть ли ключ 'post_{post.id}_viewed' в словаре session в текущей сессии, если нет то добавляем
     # И увеличиваем views на 1
@@ -106,7 +106,7 @@ def post_by_slug(request, slug):
                 comment.author = request.user
                 comment.save()
                 messages.success(request, 'Ваш комментарий находится на модерации.')
-                return redirect('post_by_slug', slug=slug)
+                return redirect('post_by_slug', slug=post_slug)
         else:
             messages.error(request, 'Для добавления комментария необходимо войти в систему.')
             return redirect('login')
@@ -163,21 +163,21 @@ def update_post(request, post_slug):
     return render(request, 'main/add_post.html', {'form': form, 'menu': menu})
 
 
-def posts_by_category(request, category):
+def posts_by_category(request, category_slug):
     context = {
         'menu': menu,
         'page_alias': 'blog', 
-        'paginated_posts': Category.objects.get(slug=category).posts.all() # Сделать пагинацию
+        'paginated_posts': Category.objects.get(slug=category_slug).posts.all() # Сделать пагинацию
     }
 
     return render(request, 'main/blog.html', context=context)
 
 
-def posts_by_tag(request, tag):
+def posts_by_tag(request, tag_slug):
     context = {
         'menu': menu,
         'page_alias': 'blog', 
-        'posts': Post.objects.filter(tags__slug=tag)
+        'posts': Post.objects.filter(tags__slug=tag_slug)
     }
 
     return render(request, 'main/blog.html', context=context)
