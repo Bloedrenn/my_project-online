@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from .dataset import dataset
 from .models import Post, Category, Tag
 
+from django.urls import reverse
 from django.http import JsonResponse
 # from django.views.decorators.csrf import csrf_exempt
 import json
@@ -61,13 +62,17 @@ def blog(request):
     except EmptyPage:
         paginated_posts = paginator.page(paginator.num_pages)  # Если страница вне диапазона, показываем последнюю
 
-    context = {
+    breadcrumbs = [
+        {'name': 'Главная', 'url': reverse('main')},
+        {'name': 'Блог'},
+    ]
+    
+    return render(request, 'main/blog.html', {
+        'breadcrumbs': breadcrumbs,
         'paginated_posts': paginated_posts,
         'menu': menu,
         'page_alias': 'blog'
-    }
-
-    return render(request, template_name='main/blog.html', context=context)
+    })
 
 
 def main(request):
@@ -78,17 +83,27 @@ def main(request):
 
     return render(request, template_name='main/index.html', context=context)
 
-def about(request):
-    context = {
-        'menu': menu,
-        'page_alias': 'about'   
-    }
 
-    return render(request, template_name='main/about.html', context=context)
+def about(request):
+    breadcrumbs = [
+        {'name': 'Главная', 'url': reverse('main')},
+        {'name': 'О проекте'},
+    ]
+    return render(request, 'main/about.html', {
+        'breadcrumbs': breadcrumbs,
+        'menu': menu,
+        'page_alias': 'about'
+    })
 
 
 def post_by_slug(request, post_slug):
     post = get_object_or_404(Post, slug=post_slug)
+
+    breadcrumbs = [
+        {'name': 'Главная', 'url': reverse('main')},
+        {'name': 'Блог', 'url': reverse('blog')},
+        {'name': post.title}
+    ]
     
     # Проверяем, есть ли ключ 'post_{post.id}_viewed' в словаре session в текущей сессии, если нет то добавляем
     # И увеличиваем views на 1
@@ -125,6 +140,7 @@ def post_by_slug(request, post_slug):
         paginated_comments = paginator.page(paginator.num_pages)
 
     context = {
+        'breadcrumbs': breadcrumbs,
         'post': post,
         'menu': menu,
         'page_alias': 'blog',

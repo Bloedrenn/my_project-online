@@ -3,6 +3,10 @@
 
 {% block title %}О проекте{% endblock %}
 
+{% block breadcrumbs %}
+    {% include 'breadcrumbs.html' %}
+{% endblock %}
+
 {% comment %} {% block header %}
     {{ block.super }}
     <p>Header</p>

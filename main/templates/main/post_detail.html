@@ -4,6 +4,10 @@
 
 {% block title %}{{ post.title }}{% endblock %}
 
+{% block breadcrumbs %}
+    {% include 'breadcrumbs.html' %}
+{% endblock %}
+
 {% block content %}
 <div class="container my-5">
 
