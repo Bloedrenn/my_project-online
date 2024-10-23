@@ -106,7 +106,7 @@ def post_by_slug(request, post_slug):
                 comment.author = request.user
                 comment.save()
                 messages.success(request, 'Ваш комментарий находится на модерации.')
-                return redirect('post_by_slug', slug=post_slug)
+                return redirect('post_by_slug', post_slug=post_slug)
         else:
             messages.error(request, 'Для добавления комментария необходимо войти в систему.')
             return redirect('login')
