@@ -3,7 +3,7 @@ from django.urls import path
 from .views import blog, add_post, update_post, add_category, add_tag, update_category, preview_post, about, post_by_slug, posts_by_category, posts_by_tag
 
 urlpatterns = [
-    path('blog/', blog, name='blog'),
+    path('', blog, name='blog'),
     path('about/', about, name='about'),
 
     path('post/<slug:post_slug>/view/', post_by_slug, name='post_by_slug'),

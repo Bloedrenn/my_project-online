@@ -91,6 +91,15 @@ footer {
   border-color: #343a40;
 }
 
+/* Анимация для пагинатора */
+.pagination .page-link {
+  transition: all 0.3s ease;
+}
+
+.pagination .page-item:hover .page-link {
+  transform: scale(1.05);
+}
+
 /* Контейнер для квадратного изображения */
 .square-image-container {
   width: 100%;
