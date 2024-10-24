@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Добавить пост{% endblock %}
+{% block title %}{{ operation_name }}{% endblock %}
 
 {% block content %}
 <div class="container">
@@ -27,7 +27,7 @@
 
         <!-- Форма для добавления поста -->
         <div class="flex-md-fill mt-3 mt-md-0 order-md-2 w-100">
-          <h1>Добавить пост</h1>
+          <h1>{{ operation_name }}</h1>
           <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
 
@@ -43,7 +43,7 @@
                 {% endif %}
               </div>
             {% endfor %}
-            <button type="submit" class="btn btn-dark mb-3">Добавить</button>
+            <button type="submit" class="btn btn-dark mb-3">{{ submit_button_text }}</button>
           </form>
         </div>
       </div>

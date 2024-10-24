@@ -162,7 +162,15 @@ def add_post(request):
     else:
         form = PostForm()
 
-    return render(request, 'main/add_post.html', {'form': form, 'menu': menu, 'page_alias': 'add_post'})
+    context = {
+        "form": form,
+        'menu': menu,
+        'page_alias': 'add_post',
+        "operation_name": "Добавить пост",
+        "submit_button_text": "Добавить",
+    }
+
+    return render(request, 'main/post_form.html', context)
 
 
 @login_required
@@ -176,7 +184,15 @@ def update_post(request, post_slug):
             return redirect('update_post', post_slug=post_slug)
     else:
         form = PostForm(instance=post)
-    return render(request, 'main/add_post.html', {'form': form, 'menu': menu})
+
+    context = {
+        "form": form,
+        'menu': menu,
+        "operation_name": "Обновить пост",
+        "submit_button_text": "Обновить",
+    }
+
+    return render(request, 'main/post_form.html', context)
 
 
 def posts_by_category(request, category_slug):
