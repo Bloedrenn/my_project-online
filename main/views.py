@@ -209,7 +209,7 @@ def posts_by_tag(request, tag_slug):
     context = {
         'menu': menu,
         'page_alias': 'blog', 
-        'posts': Post.objects.filter(tags__slug=tag_slug)
+        'paginated_posts': Post.objects.filter(tags__slug=tag_slug) # Сделать пагинацию
     }
 
     return render(request, 'main/blog.html', context=context)
