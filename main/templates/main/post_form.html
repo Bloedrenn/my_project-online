@@ -3,79 +3,78 @@
 {% block title %}{{ operation_name }}{% endblock %}
 
 {% block content %}
-<div class="container">
-  <div class="row">
-    <!-- Форма и аккордеон -->
-    <div class="col-12">
-      <div class="d-flex flex-column flex-md-row align-items-start">
-        <!-- Аккордеон для предпросмотра -->
-        <div class="accordion flex-md-fill me-md-3 order-md-1 w-100" id="previewAccordion">
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="previewHeading">
-              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#previewCollapse" aria-expanded="true" aria-controls="previewCollapse">
-                Предпросмотр
-              </button>
-            </h2>
-            <div id="previewCollapse" class="accordion-collapse collapse show" aria-labelledby="previewHeading" data-bs-parent="#previewAccordion">
-              <div class="accordion-body">
-                <!-- Контейнер для отображения предпросмотра -->
-                <div id="preview"></div>
-              </div>
-            </div>
+  <div class="container mt-4">
+    <h1 class="mb-4">{{ operation_name }}</h1>
+
+    <div class="row">
+      <div class="col-lg-6 mb-4">
+        <div class="card">
+          <div class="card-header">
+            Форма поста
+          </div>
+          <div class="card-body">
+            <form method="POST" enctype="multipart/form-data">
+              {% csrf_token %}
+
+              {% for field in form %}
+                <div class="mb-3">
+                  <label for="{{ field.name }}" class="form-label">{{ field.label }}</label>
+                  {{ field }}
+                  {% if field.errors %}
+                    <div class="text-danger">
+                      {{ field.errors }}
+                    </div>
+                  {% endif %}
+                </div>
+              {% endfor %}
+              <button type="submit" class="btn btn-dark">{{ submit_button_text }}</button>
+            </form>
           </div>
         </div>
-
-        <!-- Форма для добавления поста -->
-        <div class="flex-md-fill mt-3 mt-md-0 order-md-2 w-100">
-          <h1>{{ operation_name }}</h1>
-          <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-
-            {% for field in form %}
-              <div class="mb-3">
-                <label for="{{ field.name }}" class="form-label">{{ field.label }}</label>
-                {{ field }}
-                {% if field.errors %}
-                  <!-- Отображение ошибок валидации формы -->
-                  <div class="alert alert-danger">
-                    {{ field.errors }}
-                  </div>
-                {% endif %}
-              </div>
-            {% endfor %}
-            <button type="submit" class="btn btn-dark mb-3">{{ submit_button_text }}</button>
-          </form>
+      </div>
+      
+      <div class="col-lg-6">
+        <div class="card">
+          <div class="card-header">
+            Предпросмотр
+          </div>
+          <div class="card-body">
+            <div id="preview" style="max-height: 600px; overflow-y: auto;">
+              <!-- Здесь будет отображаться предпросмотр -->
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 
-<script>
-  let timeout = null;
-  
-  // Функция для отправки запроса на предпросмотр
-  async function sendPreviewRequest(text) {
-      const response = await fetch('{% url "preview_post" %}', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
-              'X-CSRFToken': '{{ csrf_token }}'
-          },
-          body: JSON.stringify({text: text})
-      });
-      const data = await response.json();
-      // Обновление содержимого предпросмотра
-      document.getElementById('preview').innerHTML = data.html;
-      // Подсветка синтаксиса кода
-      hljs.highlightAll();
-  }
-  
-  // Обработчик события ввода текста
-  document.getElementById('id_text').addEventListener('input', function() {
-      clearTimeout(timeout);
-      // Отложенный запрос на предпросмотр для оптимизации производительности
-      timeout = setTimeout(() => sendPreviewRequest(this.value), 1000);
-  });
-</script>
+  {% block scripts %}
+  <script>
+    let timeout = null;
+    
+    // Функция для отправки запроса на предпросмотр
+    async function sendPreviewRequest(text) {
+        const response = await fetch('{% url "preview_post" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({text: text})
+        });
+        const data = await response.json();
+        // Обновление содержимого предпросмотра
+        document.getElementById('preview').innerHTML = data.html;
+        // Подсветка синтаксиса кода
+        hljs.highlightAll();
+    }
+    
+    // Обработчик события ввода текста
+    document.getElementById('id_text').addEventListener('input', function() {
+        clearTimeout(timeout);
+        // Отложенный запрос на предпросмотр для оптимизации производительности
+        timeout = setTimeout(() => sendPreviewRequest(this.value), 500);
+    });
+  </script>
+  {% endblock %}
 {% endblock %}
