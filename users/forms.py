@@ -29,6 +29,16 @@ class UserRegisterForm(UserCreationForm):
         model = get_user_model()
         fields = ['username', 'email', 'password1', 'password2']
 
+    # Не обязательно - поле email итак unique
+    # def clean_email(self):
+    #     # Получаем email из очищенных данных формы
+    #     email = self.cleaned_data['email']
+    #     # Проверяем, существует ли пользователь с таким email в базе данных
+    #     if get_user_model().objects.filter(email=email).exists():
+    #         raise forms.ValidationError("Пользователь с таким email уже существует")
+    #     # Возвращаем проверенный email
+    #     return email
+
 
 class UserLoginForm(AuthenticationForm):
     username = forms.CharField(

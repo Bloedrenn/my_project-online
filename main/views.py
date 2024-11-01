@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from .dataset import dataset
 from .models import Post, Category, Tag
 
+from django.views.generic import View
+
 from django.urls import reverse
 from django.http import JsonResponse
 # from django.views.decorators.csrf import csrf_exempt
@@ -84,16 +86,36 @@ def main(request):
     return render(request, template_name='main/index.html', context=context)
 
 
-def about(request):
-    breadcrumbs = [
-        {'name': 'Главная', 'url': reverse('main')},
-        {'name': 'О проекте'},
-    ]
-    return render(request, 'main/about.html', {
-        'breadcrumbs': breadcrumbs,
-        'menu': menu,
-        'page_alias': 'about'
-    })
+class AboutView(View):
+    """
+    Класс-представление для отображения страницы "О проекте".
+    
+    Методы:
+        get(request) - обрабатывает GET-запросы к странице
+        
+    Атрибуты:
+        breadcrumbs - список навигационных ссылок (хлебные крошки)
+        menu - глобальное меню сайта
+        page_alias - идентификатор текущей страницы
+        
+    Шаблон: about.html
+    
+    Контекст шаблона:
+        - breadcrumbs: список словарей с навигационными ссылками
+        - menu: список пунктов главного меню
+        - page_alias: строка-идентификатор страницы
+    """
+    def get(self, request):
+        breadcrumbs = [
+            {'name': 'Главная', 'url': reverse('main')},
+            {'name': 'О проекте'},
+        ]
+
+        return render(request, 'main/about.html', {
+            'breadcrumbs': breadcrumbs,
+            'menu': menu,
+            'page_alias': 'about'
+        })
 
 
 def post_by_slug(request, post_slug):
