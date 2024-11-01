@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from .dataset import dataset
 from .models import Post, Category, Tag
 
-from django.views.generic import View
+from django.views.generic import View, TemplateView
 
 from django.urls import reverse
 from django.http import JsonResponse
@@ -77,13 +77,25 @@ def blog(request):
     })
 
 
-def main(request):
-    context = {
-        'menu': menu,
-        'page_alias': 'main'   
+class IndexView(TemplateView):
+    # Указываем имя шаблона для отображения страницы
+    template_name = "main/index.html"
+
+    # Дополняем встроенный контекст
+    extra_context = {
+        'menu': menu,          # Глобальное меню сайта
+        'page_alias': 'main',  # Идентификатор текущей страницы
     }
 
-    return render(request, template_name='main/index.html', context=context)
+    # Можно передать контекст по-другому:
+    # def get_context_data(self, **kwargs):
+    #     # Получаем базовый контекст от родительского класса
+    #     context = super().get_context_data(**kwargs)
+    #     # Добавляем в контекст глобальное меню сайта
+    #     context["menu"] = menu
+    #     # Устанавливаем идентификатор текущей страницы
+    #     context["page_alias"] = "main"
+    #     return context
 
 
 class AboutView(View):

@@ -19,12 +19,12 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-from main.views import main
+from main.views import IndexView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    path('', main, name='main'),
+    path('', IndexView.as_view(), name='main'),
     path('blog/', include('main.urls')),
     path('users/', include('users.urls'))
 ]
