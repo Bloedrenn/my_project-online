@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from .dataset import dataset
 from .models import Post, Category, Tag
 
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+
 from django.views.generic import View, TemplateView
 
 from django.urls import reverse
@@ -257,28 +259,56 @@ def preview_post(request):
         return JsonResponse({'html': html})
 
 
-@login_required
-def add_category(request):
-    context = {"menu": menu}
+class AddCategoryView(LoginRequiredMixin, View):
+    """
+    Класс-представление для добавления новой категории.
     
-    if request.method == "POST":
+    Методы:
+        get(request) - обрабатывает GET-запросы, отображает форму для создания категории
+        post(request) - обрабатывает POST-запросы, сохраняет новую категорию
+        
+    Атрибуты контекста:
+        menu - глобальное меню сайта
+        form - форма для создания категории (CategoryForm)
+        operation_title - заголовок операции
+        operation_header - заголовок формы
+        submit_button_text - текст кнопки отправки формы
+        
+    Шаблон: category_form.html
+    
+    Сообщения:
+        - Успех: "Категория '{name}' успешно добавлена!"
+        - Ошибка: "Пожалуйста, исправьте ошибки ниже."
+        
+    Редиректы:
+        - После успешного создания: add_category
+        - При ошибке валидации: add_category
+    """
+    def get(self, request):
+        # Формируем контекст для отображения формы добавления категории
+        context = {
+            "menu": menu,
+            "form": CategoryForm(),
+            "operation_title": "Добавить категорию",
+            "operation_header": "Добавить новую категорию",
+            "submit_button_text": "Создать",
+        }
+        # Отображаем шаблон с формой для создания категории
+        return render(request, "main/category_form.html", context)
+    
+    def post(self, request):
+        # Создаем форму на основе полученных POST данных
         form = CategoryForm(request.POST)
         if form.is_valid():
+            # Сохраняем новую категорию в базу данных
             form.save()
+            # Добавляем сообщение об успешном создании категории
             messages.success(request, f"Категория '{form.cleaned_data['name']}' успешно добавлена!")
             return redirect('add_category')
         else:
+            # В случае ошибки валидации формы, добавляем сообщение об ошибке
             messages.error(request, "Пожалуйста, исправьте ошибки ниже.")
-    else:
-        form = CategoryForm()
-    
-    context.update({
-        "form": form,
-        "operation_title": "Добавить категорию",
-        "operation_header": "Добавить новую категорию",
-        "submit_button_text": "Создать",
-    })
-    return render(request, "main/category_form.html", context)
+            return redirect('add_category')
     
 
 @login_required
