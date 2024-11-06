@@ -4,7 +4,7 @@ from .models import Post, Category, Tag
 
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
-from django.views.generic import View, TemplateView
+from django.views.generic import View, TemplateView, CreateView, UpdateView
 
 from django.urls import reverse
 from django.http import JsonResponse
@@ -311,33 +311,28 @@ class AddCategoryView(LoginRequiredMixin, View):
             return redirect('add_category')
     
 
-@login_required
-def add_tag(request):
+class AddTagView(LoginRequiredMixin, CreateView):
     """
-    Будет использовать форму связанную с моделью Tag - TagForm
-    Шаблон - add_tag.html
+    Класс-представление для добавления тега.
+    Наследуется от CreateView для создания объектов и LoginRequiredMixin для ограничения доступа
+    только авторизованным пользователям
     """
-    context = {"menu": menu}
-    if request.method == "GET":
-        form = TagForm()
-        context["form"] = form
-        return render(request, "main/add_tag.html", context)
-    
-    elif request.method == "POST":
-        form = TagForm(request.POST)
-        if form.is_valid():
-            # Так как форма связана с моделью мы можем использовать метод save() к форме
-            form.save()
-            # Добавляем ключ message о том что тег добавлен
-            name = form.cleaned_data['name']
 
-            context["message"] = f"Тег {name} успешно добавлен!"
-            context["form"] = form
+    # Указываем модель, с которой будет работать представление
+    model = Tag
 
-            return render(request, "main/add_tag.html", context)
-        
-        context["form"] = form
-        return render(request, "main/add_tag.html", context)
+    # Указываем форму, которую мы описали в forms.py
+    form_class = TagForm
+
+    # Указываем путь к шаблону, который будет использоваться для отображения формы
+    template_name = "main/add_tag.html"
+
+    extra_context = {
+        'menu': menu,          # Глобальное меню сайта
+    }
+
+    # Определяем поля модели, которые будут отображаться в форме (в случае если мы не указали form_class)
+    # fields = ["name"]
 
 
 @login_required
