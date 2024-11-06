@@ -348,28 +348,38 @@ class AddTagView(LoginRequiredMixin, CreateView):
         return super().form_invalid(form)
 
 
-@login_required
-def update_category(request, category_slug):
-    category = get_object_or_404(Category, slug=category_slug)
-    context = {"menu": menu}
-
-    if request.method == "POST":
-        category_name = category.name
-        form = CategoryForm(request.POST, instance=category)
-        if form.is_valid():
-            form.save()
-            messages.success(request, f"Категория '{category_name}' успешно обновлена.")
-            return redirect('posts_by_category', category=category.slug)
-            # return redirect('update_category', category_slug=category.slug)
-        else:
-            messages.error(request, "Пожалуйста, исправьте ошибки ниже.")
-    else:
-        form = CategoryForm(instance=category)
-    
-    context.update({
-        "form": form,
+class UpdateCategoryView(LoginRequiredMixin, UpdateView):
+    """
+    Класс-представление для обновления категории.
+    Наследуется от UpdateView для редактирования объектов и LoginRequiredMixin для ограничения доступа
+    только авторизованным пользователям
+    """
+    model = Category
+    form_class = CategoryForm
+    template_name = "main/category_form.html"
+    extra_context = {
+        'menu': menu,
         "operation_title": "Обновить категорию",
         "operation_header": "Обновить категорию",
         "submit_button_text": "Сохранить",
-    })
-    return render(request, "main/category_form.html", context)
+    }
+        
+    def get_object(self):
+        """Метод для получения объекта категории по slug из URL"""
+        return get_object_or_404(Category, slug=self.kwargs['category_slug'])
+    
+    def get_success_url(self):
+        """Метод определяет URL для перенаправления после успешного обновления категории"""
+        # category/<slug:category_slug>/posts/
+        return reverse_lazy('posts_by_category', kwargs={'category_slug': self.object.slug})
+    
+    def form_valid(self, form):
+        """Метод вызывается при успешной валидации формы"""
+        response = super().form_valid(form)
+        messages.success(self.request, f"Категория успешно обновлена.")
+        return response
+    
+    def form_invalid(self, form):
+        """Метод вызывается при неуспешной валидации формы"""
+        messages.error(self.request, "Пожалуйста, исправьте ошибки ниже.")
+        return super().form_invalid(form)
