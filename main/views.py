@@ -6,7 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 
 from django.views.generic import View, TemplateView, CreateView, UpdateView
 
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.http import JsonResponse
 # from django.views.decorators.csrf import csrf_exempt
 import json
@@ -327,12 +327,25 @@ class AddTagView(LoginRequiredMixin, CreateView):
     # Указываем путь к шаблону, который будет использоваться для отображения формы
     template_name = "main/add_tag.html"
 
+    success_url = reverse_lazy("add_tag")
+
     extra_context = {
         'menu': menu,          # Глобальное меню сайта
     }
 
-    # Определяем поля модели, которые будут отображаться в форме (в случае если мы не указали form_class)
-    # fields = ["name"]
+    def form_valid(self, form):
+            """Метод вызывается при успешной валидации формы"""
+            # Сохраняем форму
+            response = super().form_valid(form)
+            # Добавляем сообщение об успехе
+            messages.success(self.request, f"Тег {form.instance.name} успешно добавлен!")
+            return response
+    
+    def form_invalid(self, form):
+        """Метод вызывается при неуспешной валидации формы"""
+        # Добавляем сообщение об ошибке
+        messages.error(self.request, "Ошибка при добавлении тега. Проверьте введенные данные.")
+        return super().form_invalid(form)
 
 
 @login_required
