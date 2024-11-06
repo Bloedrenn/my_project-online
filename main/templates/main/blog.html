@@ -30,6 +30,10 @@
     </div>
     {% comment %} {% endcache %} {% endcomment %}
 
+    {% if is_paginated %}
+        {% include 'main/pagination_include.html' %}
+    {% endif %}
+
     {% comment %} Пагинатор {% endcomment %}
     {% comment %} Проверяем, что есть другие страницы {% endcomment %}
     {% if paginated_posts.has_other_pages %}

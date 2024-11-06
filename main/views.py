@@ -4,7 +4,7 @@ from .models import Post, Category, Tag
 
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
-from django.views.generic import View, TemplateView, CreateView, UpdateView
+from django.views.generic import View, TemplateView, CreateView, UpdateView, ListView
 
 from django.urls import reverse, reverse_lazy
 from django.http import JsonResponse
@@ -241,14 +241,23 @@ def posts_by_category(request, category_slug):
     return render(request, 'main/blog.html', context=context)
 
 
-def posts_by_tag(request, tag_slug):
-    context = {
+class PostsByTagListView(ListView):
+    """
+    Класс-представление для отображения списка постов по тегу.
+    """
+    model = Post
+    template_name = 'main/blog.html'
+    context_object_name = 'paginated_posts'
+    paginate_by = 2
+    extra_context = {
         'menu': menu,
-        'page_alias': 'blog', 
-        'paginated_posts': Post.objects.filter(tags__slug=tag_slug) # Сделать пагинацию
+        "page_alias": "blog"
     }
 
-    return render(request, 'main/blog.html', context=context)
+    def get_queryset(self):
+        posts = Post.objects.filter(tags__slug=self.kwargs['tag_slug'])
+        return posts
+    
 
 # @csrf_exempt # Отключает проверку CSRF токена при пост запросах для этой вью
 def preview_post(request):
