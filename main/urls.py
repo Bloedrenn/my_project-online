@@ -1,9 +1,9 @@
 from django.urls import path
 
-from .views import blog, add_post, update_post, AddCategoryView, AddTagView, UpdateCategoryView, PreviewPostView, AboutView, post_by_slug, posts_by_category, PostsByTagListView
+from .views import BlogView, add_post, update_post, AddCategoryView, AddTagView, UpdateCategoryView, PreviewPostView, AboutView, post_by_slug, posts_by_category, PostsByTagListView
 
 urlpatterns = [
-    path('', blog, name='blog'),
+    path('', BlogView.as_view(), name='blog'),
     path('about/', AboutView.as_view(), name='about'), # as_view() - это метод класса-представления, который возвращает экземпляр класса-представления, готовый к обработке запроса.
 
     path('post/<slug:post_slug>/view/', post_by_slug, name='post_by_slug'),

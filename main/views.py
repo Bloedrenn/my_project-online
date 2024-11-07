@@ -32,51 +32,45 @@ menu = [
 ]
 
 
-def blog(request):
-    search_query = request.GET.get('search', '')
-    search_category = request.GET.get("search_category")
-    search_tag = request.GET.get("search_tag")
-    # search_comments = request.GET.get("search_comments")
-
-    page_number = request.GET.get('page', 1)  # Получаем номер страницы из URL-параметра 'page' /blog/?page=2
-
-    posts = Post.objects.prefetch_related('tags', 'comments').select_related('author', 'category').filter(status="published")
-
-    if search_query:
-        query = Q(title__icontains=search_query) | Q(text__icontains=search_query) 
-        
-        if search_category:
-            query |= Q(category__name__icontains=search_query)
-        
-        if search_tag:
-            query |= Q(tags__name__icontains=search_query)
-        
-        # if search_comments:
-        #     query |= Q(comment__text__icontains=search_query)
-        
-        posts = posts.filter(query)
-
-    posts = posts.distinct().order_by("-created_at")
-
-    paginator = Paginator(posts, 4) # первый аргумент - кверисет, второй - сколько объектов на странице
-    try:
-        paginated_posts = paginator.page(page_number)
-    except PageNotAnInteger:
-        paginated_posts = paginator.page(1)  # Если параметр page не число, показываем первую страницу
-    except EmptyPage:
-        paginated_posts = paginator.page(paginator.num_pages)  # Если страница вне диапазона, показываем последнюю
-
-    breadcrumbs = [
-        {'name': 'Главная', 'url': reverse('main')},
-        {'name': 'Блог'},
-    ]
-    
-    return render(request, 'main/blog.html', {
-        'breadcrumbs': breadcrumbs,
-        'paginated_posts': paginated_posts,
+class BlogView(ListView):
+    model = Post
+    template_name = 'main/blog.html'
+    context_object_name = 'posts'
+    paginate_by = 4
+    extra_context = {
         'menu': menu,
-        'page_alias': 'blog'
-    })
+        'page_alias': 'blog',
+        'breadcrumbs': [
+            {'name': 'Главная', 'url': reverse_lazy('main')},
+            {'name': 'Блог'},
+        ]
+    }
+
+    def get_queryset(self):
+        # Базовый QuerySet с предзагрузкой связанных данных
+        queryset = Post.objects.prefetch_related('tags', 'comments').select_related('author', 'category').filter(status="published")
+        
+        # Получаем параметры поиска из GET-запроса
+        search_query = self.request.GET.get("search", "")
+        search_category = self.request.GET.get("search_category")
+        search_tag = self.request.GET.get("search_tag")
+        search_comments = self.request.GET.get("search_comments")
+
+        if search_query:
+            query = Q(title__icontains=search_query) | Q(text__icontains=search_query)
+            
+            if search_category:
+                query |= Q(category__name__icontains=search_query)
+            
+            if search_tag:
+                query |= Q(tags__name__icontains=search_query)
+            
+            if search_comments:
+                query |= Q(comments__text__icontains=search_query)
+            
+            queryset = queryset.filter(query)
+
+        return queryset.distinct().order_by("-created_at")
 
 
 class IndexView(TemplateView):
@@ -247,7 +241,7 @@ class PostsByTagListView(ListView):
     """
     model = Post
     template_name = 'main/blog.html'
-    context_object_name = 'paginated_posts'
+    context_object_name = 'posts'
     paginate_by = 2
     extra_context = {
         'menu': menu,

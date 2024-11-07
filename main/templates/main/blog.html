@@ -16,7 +16,7 @@
 
     {% comment %} {% cache 60 blog_post_list paginated_posts.number %} {% endcomment %} {% comment %} paginated_posts.number - пока не используем {% endcomment %}
     <div class="row">
-        {% for post in paginated_posts %}
+        {% for post in posts %}
             {% if post.status == 'published' %}
                 <div class="col-md-6 mb-4">
                     {% include 'main/post_preview_include.html' %}
@@ -32,12 +32,6 @@
 
     {% if is_paginated %}
         {% include 'main/pagination_include.html' %}
-    {% endif %}
-
-    {% comment %} Пагинатор {% endcomment %}
-    {% comment %} Проверяем, что есть другие страницы {% endcomment %}
-    {% if paginated_posts.has_other_pages %}
-        {% include 'main/pagination_include.html' with page_obj=paginated_posts %}
     {% endif %}
 </div>
 {% endblock %}
