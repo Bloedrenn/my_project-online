@@ -257,15 +257,23 @@ class PostsByTagListView(ListView):
     def get_queryset(self):
         posts = Post.objects.filter(tags__slug=self.kwargs['tag_slug'])
         return posts
-    
 
-# @csrf_exempt # Отключает проверку CSRF токена при пост запросах для этой вью
-def preview_post(request):
-    if request.method == 'POST':
+
+class PreviewPostView(View):
+    """
+    Класс-представление для предпросмотра постов через AJAX
+    """
+    http_method_names = ['post']  # Явно указываем разрешенный метод
+    
+    def post(self, request):
+        # Получаем данные из тела AJAX-запроса в формате JSON
         data = json.loads(request.body)
-        text = data.get('text', '')
+        # Извлекаем текст поста из данных с пустой строкой как значение по умолчанию
+        text = data.get("text", "")
+        # Преобразуем markdown-разметку в HTML для предпросмотра
         html = markdown_to_html(text)
-        return JsonResponse({'html': html})
+        # Отправляем готовый HTML в формате JSON обратно клиенту
+        return JsonResponse({"html": html})
 
 
 class AddCategoryView(LoginRequiredMixin, View):
