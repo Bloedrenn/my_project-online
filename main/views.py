@@ -230,14 +230,30 @@ def update_post(request, post_slug):
     return render(request, 'main/post_form.html', context)
 
 
-def posts_by_category(request, category_slug):
-    context = {
-        'menu': menu,
-        'page_alias': 'blog', 
-        'paginated_posts': Category.objects.get(slug=category_slug).posts.all() # Сделать пагинацию
-    }
+class PostsByCategoryListView(ListView):
+    model = Post
+    template_name = 'main/blog.html'
+    context_object_name = 'posts'
+    paginate_by = 4
 
-    return render(request, 'main/blog.html', context=context)
+    def get_queryset(self):
+        category_slug = self.kwargs['category_slug']
+        return Post.objects.select_related('author', 'category')\
+                        .prefetch_related('tags', 'comments')\
+                        .filter(category__slug=category_slug)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['menu'] = menu
+        context['page_alias'] = 'blog'
+        context['breadcrumbs'] = [
+            {'name': 'Главная', 'url': reverse('main')},
+            {'name': 'Блог', 'url': reverse('blog')},
+            {'name': Category.objects.get(slug=self.kwargs['category_slug']).name}
+        ]
+
+        return context
 
 
 class PostsByTagListView(ListView):
