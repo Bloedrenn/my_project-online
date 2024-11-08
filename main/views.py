@@ -1,10 +1,10 @@
-from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
-from .dataset import dataset
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Post, Category, Tag
 
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 
-from django.views.generic import View, TemplateView, CreateView, UpdateView, ListView
+from django.views.generic import View, TemplateView, CreateView, UpdateView, ListView, DetailView
+from django.views.generic.edit import FormMixin
 
 from django.urls import reverse, reverse_lazy
 from django.http import JsonResponse
@@ -126,59 +126,64 @@ class AboutView(View):
         })
 
 
-def post_by_slug(request, post_slug):
-    post = get_object_or_404(Post, slug=post_slug)
+class PostDetailView(FormMixin, DetailView):
+    model = Post
+    template_name = 'main/post_detail.html'
+    # context_object_name = 'post' Не нужно
+    form_class = CommentForm
 
-    breadcrumbs = [
-        {'name': 'Главная', 'url': reverse('main')},
-        {'name': 'Блог', 'url': reverse('blog')},
-        {'name': post.title}
-    ]
-    
-    # Проверяем, есть ли ключ 'post_{post.id}_viewed' в словаре session в текущей сессии, если нет то добавляем
-    # И увеличиваем views на 1
-    if f'post_{post.id}_viewed' not in request.session:
-        Post.objects.filter(id=post.id).update(views=F('views') + 1)
-        request.session[f'post_{post.id}_viewed'] = True
+    def get_success_url(self):
+        return reverse('post_by_slug', kwargs={'slug': self.object.slug})
 
-    if request.method == 'POST':
-        if request.user.is_authenticated:
-            form = CommentForm(request.POST)
-            if form.is_valid():
-                # Создаем комментарий, но пока не сохраняем в базу
-                comment = form.save(commit=False)
-                comment.post = post
-                comment.author = request.user
-                comment.save()
-                messages.success(request, 'Ваш комментарий находится на модерации.')
-                return redirect('post_by_slug', post_slug=post_slug)
+    def get_object(self, queryset=None):
+        post = super().get_object(queryset)
+
+        # Проверяем, есть ли ключ 'post_{post.id}_viewed' в словаре session в текущей сессии, если нет то добавляем
+        # И увеличиваем views на 1
+        if f'post_{post.id}_viewed' not in self.request.session:
+            Post.objects.filter(id=post.id).update(views=F('views') + 1)
+            self.request.session[f'post_{post.id}_viewed'] = True
+
+        return post
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        comments = self.object.comments.filter(status='accepted').order_by('created_at')
+        paginator = Paginator(comments, 20)
+        page_number = self.request.GET.get('page')
+
+        try:
+            paginated_comments = paginator.page(page_number)
+        except PageNotAnInteger:
+            paginated_comments = paginator.page(1)
+        except EmptyPage:
+            paginated_comments = paginator.page(paginator.num_pages)
+
+        context['paginated_comments'] = paginated_comments
+        context['menu'] = menu
+        context['page_alias'] = 'blog'
+        context['breadcrumbs'] = [
+            {'name': 'Главная', 'url': reverse('main')},
+            {'name': 'Блог', 'url': reverse('blog')},
+            {'name': self.object.title}
+        ]
+        
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = self.object
+            comment.author = request.user
+            comment.save()
+            messages.success(request, 'Ваш комментарий находится на модерации.')
+            return redirect(self.get_success_url())
         else:
-            messages.error(request, 'Для добавления комментария необходимо войти в систему.')
-            return redirect('login')
-    else:
-        form = CommentForm()
-
-    # Пагинация комментариев
-    comments = post.comments.filter(status='accepted').order_by('created_at')
-    paginator = Paginator(comments, 20)  # 20 комментариев на страницу
-    page_number = request.GET.get('page', 1)
-    try:
-        paginated_comments = paginator.page(page_number)
-    except PageNotAnInteger:
-        paginated_comments = paginator.page(1)
-    except EmptyPage:
-        paginated_comments = paginator.page(paginator.num_pages)
-
-    context = {
-        'breadcrumbs': breadcrumbs,
-        'post': post,
-        'menu': menu,
-        'page_alias': 'blog',
-        'form': form,
-        'paginated_comments': paginated_comments
-    }
-    
-    return render(request, 'main/post_detail.html', context=context)
+            return self.form_invalid(form)
 
 
 @login_required
