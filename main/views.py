@@ -24,6 +24,10 @@ from django.contrib.auth.decorators import login_required, permission_required
 # from django.core.cache import cache
 # from django.core.cache.utils import make_template_fragment_key
 
+# Оказалось не нужным:
+# from django.utils.decorators import method_decorator
+# @method_decorator(login_required)
+
 menu = [
     {"name": "Главная", "alias": "main"},
     {"name": "Блог", "alias": "blog"},
@@ -415,3 +419,21 @@ class UpdateCategoryView(LoginRequiredMixin, UpdateView):
         """Метод вызывается при неуспешной валидации формы"""
         messages.error(self.request, "Пожалуйста, исправьте ошибки ниже.")
         return super().form_invalid(form)
+    
+
+class LikePostView(View):
+    def post(self, request, slug):
+        post = get_object_or_404(Post, slug=slug)
+        user = request.user
+
+        if post.liked_users.filter(id=user.id).exists():
+            # Пользователь уже лайкнул пост, удаляем лайк
+            post.liked_users.remove(user)
+            liked = False
+        else:
+            # Пользователь еще не лайкнул пост, добавляем лайк
+            post.liked_users.add(user)
+            liked = True
+            
+        # Возвращаем обновленные данные о лайках
+        return JsonResponse({'liked': liked, 'likes_count': post.liked_users.count()})

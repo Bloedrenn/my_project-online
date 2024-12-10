@@ -21,6 +21,7 @@ class Post(models.Model):
     slug = models.SlugField(editable=False, unique=True)
     category = models.ForeignKey('Category', related_name='posts', blank=True, null=True, on_delete=models.CASCADE)
     tags = models.ManyToManyField('Tag', related_name='posts')
+    liked_users = models.ManyToManyField(get_user_model(), related_name='liked_posts', verbose_name='Лайки')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     views = models.IntegerField(default=0)

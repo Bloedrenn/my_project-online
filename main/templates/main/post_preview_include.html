@@ -1,7 +1,7 @@
 {% load static %}
-{% load cache %}
+{% comment %} {% load cache %} {% endcomment %}
 
-{% cache 60 post_preview post.id %}
+{% comment %} {% cache 60 post_preview post.id %} {% endcomment %}
 <div class="card mb-4">
     <div class="row g-0 p-3">
         <!-- Колонка с изображением -->
@@ -29,6 +29,10 @@
                     </small>
                     <small class="text-muted me-2">
                         <i class="bi bi-chat-left"></i> {{ post.comments.count }}
+                    </small>
+                    <small class="text-muted me-2">
+                        <i class="bi bi-hand-thumbs-up{% if user.is_authenticated and user in post.liked_users.all %}-fill{% endif %}"></i>
+                        {{ post.liked_users.count }}
                     </small>
                     <small class="text-muted">
                         <i class="bi bi-calendar"></i> {{ post.created_at|date:"d M Y" }}
@@ -67,4 +71,4 @@
         </div>
     </div>
 </div>
-{% endcache %}
+{% comment %} {% endcache %} {% endcomment %}
